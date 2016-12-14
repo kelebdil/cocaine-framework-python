@@ -105,6 +105,7 @@ class BaseService(object):
                     pipe_epoch = self.pipe_epoch
                     self.pipe = yield TCPClient(io_loop=self.io_loop).connect(host, port)
                     self.pipe.set_nodelay(True)
+                    self.pipe.read_chunk_size = 10*1024*1024
                     self.pipe.read_until_close(callback=functools.partial(weak_wrapper, weakref.ref(self), "on_close", pipe_epoch),
                                                streaming_callback=functools.partial(weak_wrapper, weakref.ref(self), "on_read"))
                 except Exception as err:
